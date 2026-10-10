@@ -1,0 +1,133 @@
+{
+  "app": {
+    "title": "SevaMitra",
+    "subtitle": "AI-Powered Government Service Assistant for Rural Citizens",
+    "tagline": "Ask in your language, hear the answer, understand your rights."
+  },
+  "nav": {
+    "home": "Home",
+    "assistant": "Voice Assistant",
+    "recommendations": "Eligibility Finder",
+    "documents": "Document Checker",
+    "tracking": "Application Guide",
+    "language": "Language",
+    "sound_on": "Voice Audio ON",
+    "sound_off": "Voice Audio Muted"
+  },
+  "lang_modal": {
+    "title": "Choose Your Language / மொழியைத் தேர்ந்தெடுக்கவும்",
+    "subtitle": "Select your preferred language. You can speak or type and receive voice answers.",
+    "english_desc": "Get all schemes, voice answers, and checklists in English",
+    "tamil_desc": "அனைத்து அரசுத் திட்டங்கள் மற்றும் குரல் வழிகாட்டலை தமிழில் பெறவும்",
+    "confirm": "Continue",
+    "remember_note": "Your preference will be remembered on this device."
+  },
+  "hero": {
+    "badge": "Official Verified Schemes • Free Citizen Helpdesk",
+    "heading": "Know Your Government Schemes Without Confusion",
+    "description": "Speak or type in your language. Discover subsidies, pensions, welfare schemes, verify your documents, and follow step-by-step guides.",
+    "speak_button": "Tap to Speak Question",
+    "type_placeholder": "Ask e.g., 'Am I eligible for old age pension?' or 'How to apply for PM-Kisan?'",
+    "ask_button": "Ask Assistant"
+  },
+  "voice_recovery": {
+    "listening": "Listening... Please speak your question now.",
+    "no_speech": "We didn't hear anything. Please try speaking again or click an option below.",
+    "unclear": "Could not recognize the speech clearly. Would you like to try again or pick a service?",
+    "retry": "Try Speaking Again",
+    "or_choose": "Or choose what you want to do:",
+    "option_eligibility": "Check scheme eligibility",
+    "option_documents": "Find required documents",
+    "option_how_to_apply": "Understand how to apply",
+    "option_track_status": "Check application status"
+  },
+  "modules": {
+    "assistant_title": "AI Multilingual Assistant",
+    "assistant_desc": "Ask any question by voice or text. Answers are grounded in verified government documents.",
+    "recommend_title": "Personalized Scheme Finder",
+    "recommend_desc": "Enter basic details (age, occupation, income) to instantly see schemes you may qualify for.",
+    "doc_checker_title": "Document Readiness Checker",
+    "doc_checker_desc": "Scan or upload your papers to check if required details (Aadhaar, income) are ready.",
+    "tracking_title": "Step-by-Step Application Guide",
+    "tracking_desc": "Step-by-step checklist of application stages with reminders and progress saving."
+  },
+  "doc_checker": {
+    "badge": "Document Readiness Checker",
+    "title": "Verify Your Papers Before Visiting e-Seva Centre",
+    "description": "Upload Aadhaar, Income Certificate, or Land Records to verify prerequisites and avoid multiple office visits.",
+    "select_scheme": "1. Select target government scheme:",
+    "samples_label": "Instant 1-Click Test Scenarios (No Upload Required):",
+    "sample_valid_oap": "✅ Valid Aadhaar + Income (Old Age Pension)",
+    "sample_incomplete": "⚠️ Incomplete / Blurred Photo (Action Needed)",
+    "sample_pm_kisan": "🌾 Farmer Land Record / Patta (PM-KISAN)",
+    "sample_kmut": "👩 Smart Ration Card (KMUT Women Grant)",
+    "sample_cmchis": "🏥 Health Insurance Card & Income (CMCHIS)",
+    "upload_label": "2. Or Upload Your Document Photo or PDF:",
+    "upload_drop_text": "Click or tap to upload document photo",
+    "upload_formats": "Aadhaar Card, Income Certificate, Ration Card, or Patta (PNG, JPG, PDF)",
+    "privacy_note": "Privacy Notice: Documents are processed strictly in-memory and discarded immediately without disk storage.",
+    "tips_title": "Guidelines for Clear Document Scanning:",
+    "tip_light": "Capture photo in bright daylight; avoid harsh flash reflections",
+    "tip_seal": "Ensure official Tahsildar / VAO stamps and signatures are visible",
+    "tip_flat": "Keep document flat without folded corners or unreadable angles",
+    "scan_btn": "Analyze Document Readiness",
+    "scanning_btn": "Extracting OCR Text & Verifying...",
+    "score_label": "Readiness Assessment",
+    "status_ready": "Ready for e-Seva Submission",
+    "status_action_needed": "Action Required Before Submission",
+    "detected_title": "Detected Valid Details:",
+    "missing_title": "Unclear or Missing Requirements:",
+    "ocr_preview_title": "Extracted OCR Text Preview:",
+    "check_another": "Check Another Document",
+    "disclaimer_title": "Advisory Note:",
+    "next_steps_title": "Recommended Next Step:",
+    "next_step_ready": "Your papers appear ready! Take original physical copies to your nearest Taluk office or e-Seva centre.",
+    "next_step_action": "Re-take photo in brighter light or visit VAO office to obtain clear income certificate seal.",
+    "back_home": "Back to Home",
+    "go_to_guide": "View Step-by-Step Application Guide"
+  },
+  "guide": {
+    "badge": "Step-by-Step Application Guide & Tracker",
+    "title": "Clear Guidance from Application to Bank Credit",
+    "description": "Follow ordered steps, save your collected documents, and track your application progress.",
+    "tab_roadmap": "1. Step-by-Step Roadmap",
+    "tab_checklist": "2. My Saved Checklist",
+    "tab_tracker": "3. Application Status Tracker",
+    "select_scheme": "Select Target Scheme:",
+    "step_label": "Step",
+    "authority_label": "Department / Official:",
+    "time_label": "Estimated Time:",
+    "pitfall_label": "Important Tip / Avoid Confusion:",
+    "checklist_title": "Collected Documents Checklist",
+    "checklist_progress": "Document Collection Progress",
+    "checklist_ready_count": "items ready",
+    "checklist_note": "Your selections are saved automatically on this device so you can return anytime.",
+    "tracker_input_label": "Enter Application Reference Number:",
+    "tracker_placeholder": "e.g., TN-OAP-2026-8941029",
+    "tracker_btn": "Track Application",
+    "demo_references_label": "Or Test 1-Click Demo References:",
+    "demo_approved": "✅ Approved Old Age Pension (TN-OAP-2026-8941029)",
+    "demo_review": "⏳ Under Review KMUT Scheme (TN-KMUT-2026-5510293)",
+    "stage_label": "Stage",
+    "officer_note_label": "Officer Note / Action Log:",
+    "disclaimer_title": "Advisory Note:"
+  },
+  "audio": {
+    "play": "Listen to this answer",
+    "replay": "Replay Audio",
+    "stop": "Stop Audio",
+    "playing": "Reading aloud...",
+    "audio_error": "Voice playback unavailable. The full text is displayed below."
+  },
+  "disclaimers": {
+    "official_note": "Information is sourced from official government portals. This tool provides preliminary guidance and is not an official government approval body.",
+    "source_label": "Official Source",
+    "readiness_note": "Document check is an advisory scan to help you prepare before visiting the Taluk/e-Seva center."
+  },
+  "status": {
+    "loading": "Loading information...",
+    "error": "An error occurred. Please try again.",
+    "backend_online": "Backend Service Connected",
+    "backend_offline": "Connecting to Service..."
+  }
+}
