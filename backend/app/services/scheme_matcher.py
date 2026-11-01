@@ -148,23 +148,33 @@ def match_schemes(profile_data: dict, lang: str = "ta") -> List[Dict[str, Any]]:
         # Build recommendation card payload
         status_label = "HIGH" if match_score >= 70 else ("MODERATE" if match_score >= 40 else "LOW")
         
+        disclaimer_map = {
+            "ta": "இது முதற்கட்ட மதிப்பீடு மட்டுமே. அரசு அலுவலகத்தில் சான்றிதழ்கள் சரிபார்க்கப்பட்ட பிறகே இறுதி தகுதி தீர்மானிக்கப்படும்.",
+            "hi": "यह केवल एक प्रारंभिक मूल्यांकन है। दस्तावेजों के सत्यापन के बाद ही अंतिम पात्रता निर्धारित की जाएगी।",
+            "mr": "हे केवळ प्राथमिक मूल्यांकन आहे. कागदपत्रांच्या पडताळणीनंतरच अंतिम पात्रता निश्चित केली जाईल.",
+            "bn": "এটি কেবল একটি প্রাথমিক মূল্যায়ন। নথিপত্র যাচাইয়ের পরেই চূড়ান্ত যোগ্যতা নির্ধারিত হবে।",
+            "en": "This is an advisory assessment. Official eligibility is determined solely after document verification by authorities."
+        }
+
+        scheme_name = s.get(f"name_{lang}") or s.get("name_en")
+        benefit = s.get(f"benefit_{lang}") or s.get("benefit_en")
+        required_docs = s.get(f"required_documents_{lang}") or s.get("required_documents_en")
+        reasons = reasons_ta if lang == "ta" else reasons_en
+        missing = missing_ta if lang == "ta" else missing_en
+
         results.append({
             "scheme_id": scheme_id,
-            "scheme_name": s["name_ta"] if is_tamil else s["name_en"],
+            "scheme_name": scheme_name,
             "category": s["category"],
-            "benefit": s["benefit_ta"] if is_tamil else s["benefit_en"],
+            "benefit": benefit,
             "match_score": match_score,
             "status": status_label,
             "is_eligible": is_eligible,
-            "why_matched": reasons_ta if is_tamil else reasons_en,
-            "missing_info": missing_ta if is_tamil else missing_en,
-            "required_documents": s["required_documents_ta"] if is_tamil else s["required_documents_en"],
+            "why_matched": reasons,
+            "missing_info": missing,
+            "required_documents": required_docs,
             "official_portal": s["official_portal"],
-            "disclaimer": (
-                "இது முதற்கட்ட மதிப்பீடு மட்டுமே. அரசு அலுவலகத்தில் சான்றிதழ்கள் சரிபார்க்கப்பட்ட பிறகே இறுதி தகுதி தீர்மானிக்கப்படும்."
-                if is_tamil else
-                "This is an advisory assessment. Official eligibility is determined solely after document verification by authorities."
-            )
+            "disclaimer": disclaimer_map.get(lang, disclaimer_map["en"])
         })
 
     # Sort so top recommendations appear first

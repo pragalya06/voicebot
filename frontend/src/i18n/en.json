@@ -32,9 +32,14 @@
   },
   "voice_recovery": {
     "listening": "Listening... Please speak your question now.",
+    "listening_hint": "Speak now — we will detect your language automatically.",
     "no_speech": "We didn't hear anything. Please try speaking again or click an option below.",
-    "unclear": "Could not recognize the speech clearly. Would you like to try again or pick a service?",
+    "unclear": "Could not recognize the speech clearly. Would you like to try again or type your question?",
+    "not_allowed": "Microphone access was denied. Please enable microphone permissions in your browser settings.",
     "retry": "Try Speaking Again",
+    "type_instead": "Type your question instead",
+    "type_question": "Type your question",
+    "demo_label": "Test language detection:",
     "or_choose": "Or choose what you want to do:",
     "option_eligibility": "Check scheme eligibility",
     "option_documents": "Find required documents",
@@ -84,7 +89,8 @@
     "next_step_ready": "Your papers appear ready! Take original physical copies to your nearest Taluk office or e-Seva centre.",
     "next_step_action": "Re-take photo in brighter light or visit VAO office to obtain clear income certificate seal.",
     "back_home": "Back to Home",
-    "go_to_guide": "View Step-by-Step Application Guide"
+    "go_to_guide": "View Step-by-Step Application Guide",
+    "click_to_change": "Click to change file"
   },
   "guide": {
     "badge": "Step-by-Step Application Guide & Tracker",
@@ -110,7 +116,14 @@
     "demo_review": "⏳ Under Review KMUT Scheme (TN-KMUT-2026-5510293)",
     "stage_label": "Stage",
     "officer_note_label": "Officer Note / Action Log:",
-    "disclaimer_title": "Advisory Note:"
+    "disclaimer_title": "Advisory Note:",
+    "reset_checklist": "Reset Checklist",
+    "back_to_home": "Back to Home",
+    "reference_label": "Reference:",
+    "applicant_label": "Applicant:",
+    "submitted_label": "Submitted:",
+    "status_approved": "✅ Sanction Approved",
+    "status_review": "⏳ Field Verification Underway"
   },
   "audio": {
     "play": "Listen to this answer",
@@ -129,5 +142,58 @@
     "error": "An error occurred. Please try again.",
     "backend_online": "Backend Service Connected",
     "backend_offline": "Connecting to Service..."
+  },
+  "eligibility": {
+    "badge": "Personalized Scheme Finder",
+    "heading": "Discover Government Schemes You Qualify For",
+    "description": "Enter minimal details to evaluate eligibility across social welfare, pensions, and farmer schemes.",
+    "q_age": "What is your age?",
+    "years": "years",
+    "age_oap": "60 (OAP Threshold)",
+    "q_gender": "Gender",
+    "female": "Female",
+    "male": "Male",
+    "q_occupation": "Primary Occupation",
+    "farmer": "Farmer",
+    "homemaker": "Homemaker",
+    "laborer": "Daily Wage Laborer",
+    "other_retired": "Other / Retired",
+    "q_income": "Annual Family Income Range",
+    "bpl": "Below Poverty Line (BPL)",
+    "cmchis_cap": "CMCHIS Health Cap",
+    "kmut_ceiling": "KMUT Ceiling",
+    "general": "General",
+    "q_marital": "Marital Status",
+    "married": "Married",
+    "widowed": "Widowed / Destitute",
+    "single": "Single",
+    "find_schemes_btn": "Find My Eligible Schemes",
+    "evaluating": "Evaluating Scheme Rules...",
+    "recommended_heading": "Recommended Schemes",
+    "high_matches": "High Matches",
+    "modify_answers": "Modify Answers",
+    "back_to_home": "Back to Home",
+    "no_matches": "No high-scoring schemes matched your current profile. You can modify your answers or ask the Assistant."
+  },
+  "scheme_card": {
+    "match": "Match",
+    "why_matched": "Why this matches:",
+    "criteria_met": "Criteria fulfilled",
+    "missing_reqs": "Missing Requirements / Verification Needed:",
+    "required_docs": "Key Required Documents:",
+    "official_portal": "Official Portal",
+    "speak_benefit": "Benefit",
+    "speak_why": "Why it matches"
+  },
+  "schemes": {
+    "oap": "Indira Gandhi National Old Age Pension Scheme (IGNOAPS)",
+    "kmut": "Kalaignar Magalir Urimai Thogai Scheme",
+    "pm_kisan": "PM-KISAN Farmer Scheme",
+    "cmchis": "CMCHIS Health Insurance Scheme",
+    "widow_pension": "Destitute Widow Pension Scheme",
+    "old_age_pension": "Indira Gandhi National Old Age Pension Scheme (IGNOAPS)",
+    "kalaignar_magalir_urimai": "Kalaignar Magalir Urimai Thogai Scheme",
+    "cmchis_health": "CMCHIS Health Insurance Scheme",
+    "widow_destitute_pension": "Destitute Widow Pension Scheme"
   }
 }

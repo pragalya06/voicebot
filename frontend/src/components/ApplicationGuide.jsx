@@ -5,7 +5,11 @@ import { AudioPlayer } from './AudioPlayer';
 
 export const ApplicationGuide = ({ onBackToHome, initialScheme = 'old_age_pension' }) => {
   const { currentLanguage, t } = useTranslation();
-  const isTamil = currentLanguage === 'ta';
+
+  const getLocalized = (obj, field) => {
+    if (!obj) return '';
+    return obj[`${field}_${currentLanguage}`] || obj[`${field}_en`] || '';
+  };
 
   const [activeSubTab, setActiveSubTab] = useState('roadmap'); // 'roadmap', 'checklist', 'tracker'
   const [selectedScheme, setSelectedScheme] = useState(initialScheme);
@@ -83,9 +87,11 @@ export const ApplicationGuide = ({ onBackToHome, initialScheme = 'old_age_pensio
   };
 
   // Calculate Checklist Completion Rate
-  const totalDocs = isTamil
-    ? (roadmapData?.required_documents_ta || [])
-    : (roadmapData?.required_documents_en || []);
+  const totalDocs = (
+    roadmapData?.[`required_documents_${currentLanguage}`] ||
+    roadmapData?.required_documents_en ||
+    []
+  );
   
   const checkedCount = Object.values(checkedDocs).filter(Boolean).length;
   const completionPercentage = totalDocs.length > 0
@@ -211,13 +217,13 @@ export const ApplicationGuide = ({ onBackToHome, initialScheme = 'old_age_pensio
           }}
         >
           <option value="old_age_pension">
-            {isTamil ? 'முதியோர் ஓய்வூதியத் திட்டம் (OAP)' : 'Indira Gandhi Old Age Pension Scheme (IGNOAPS)'}
+            {t('schemes.old_age_pension')}
           </option>
           <option value="kalaignar_magalir_urimai">
-            {isTamil ? 'கலைஞர் மகளிர் உரிமைத் திட்டம் (KMUT)' : 'Kalaignar Magalir Urimai Thogai Scheme'}
+            {t('schemes.kalaignar_magalir_urimai')}
           </option>
           <option value="pm_kisan">
-            {isTamil ? 'பிரதம மந்திரி கிசான் சம்மான் நிதி (PM-KISAN)' : 'PM-KISAN Farmer Scheme'}
+            {t('schemes.pm_kisan')}
           </option>
         </select>
       </div>
@@ -230,7 +236,7 @@ export const ApplicationGuide = ({ onBackToHome, initialScheme = 'old_age_pensio
               {/* Voice Audio Narration Bar */}
               <div style={{ marginBottom: '1.5rem' }}>
                 <AudioPlayer
-                  text={isTamil ? roadmapData.voice_summary_ta : roadmapData.voice_summary_en}
+                  text={getLocalized(roadmapData, 'voice_summary')}
                   autoPlay={false}
                 />
               </div>
@@ -272,21 +278,21 @@ export const ApplicationGuide = ({ onBackToHome, initialScheme = 'old_age_pensio
                           {t('guide.step_label')} {step.step_number}
                         </span>
                         <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#1e293b', marginTop: '2px' }}>
-                          {isTamil ? step.title_ta : step.title_en}
+                          {getLocalized(step, 'title')}
                         </h3>
                       </div>
                     </div>
 
                     {/* Step Description */}
                     <p style={{ fontSize: '0.975rem', color: '#334155', lineHeight: 1.6, marginBottom: '1rem' }}>
-                      {isTamil ? step.description_ta : step.description_en}
+                      {getLocalized(step, 'description')}
                     </p>
 
                     {/* Meta Metadata (Authority & Time) */}
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', fontSize: '0.85rem', marginBottom: '0.75rem' }}>
                       <span style={{ background: '#f1f5f9', color: '#475569', padding: '0.35rem 0.75rem', borderRadius: '8px', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                         <UserCheck size={15} color="#2563eb" />
-                        <span>{t('guide.authority_label')} <strong>{isTamil ? step.authority_ta : step.authority_en}</strong></span>
+                        <span>{t('guide.authority_label')} <strong>{getLocalized(step, 'authority')}</strong></span>
                       </span>
 
                       <span style={{ background: '#eff6ff', color: '#1d4ed8', padding: '0.35rem 0.75rem', borderRadius: '8px', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
@@ -296,7 +302,7 @@ export const ApplicationGuide = ({ onBackToHome, initialScheme = 'old_age_pensio
                     </div>
 
                     {/* Pitfall / Caution Box */}
-                    {(step.pitfalls_en || step.pitfalls_ta) && (
+                    {(step.pitfalls_en || step.pitfalls_ta || step[`pitfalls_${currentLanguage}`]) && (
                       <div style={{
                         background: '#fffbeb',
                         borderRadius: '10px',
@@ -311,7 +317,7 @@ export const ApplicationGuide = ({ onBackToHome, initialScheme = 'old_age_pensio
                           <span>{t('guide.pitfall_label')}</span>
                         </div>
                         <p style={{ margin: 0 }}>
-                          {isTamil ? step.pitfalls_ta : step.pitfalls_en}
+                          {getLocalized(step, 'pitfalls')}
                         </p>
                       </div>
                     )}
@@ -412,7 +418,7 @@ export const ApplicationGuide = ({ onBackToHome, initialScheme = 'old_age_pensio
               }}
             >
               <RefreshCw size={14} />
-              <span>{isTamil ? 'சரிபார்ப்பு பட்டியலை மீட்டமைக்க' : 'Reset Checklist'}</span>
+              <span>{t('guide.reset_checklist')}</span>
             </button>
           </div>
         </div>
@@ -524,13 +530,13 @@ export const ApplicationGuide = ({ onBackToHome, initialScheme = 'old_age_pensio
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.25rem' }}>
                 <div>
                   <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#0284c7', textTransform: 'uppercase' }}>
-                    {isTamil ? trackerResult.scheme_name_ta : trackerResult.scheme_name_en}
+                    {getLocalized(trackerResult, 'scheme_name')}
                   </span>
                   <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginTop: '2px' }}>
-                    {isTamil ? 'விண்ணப்ப எண்:' : 'Reference:'} {trackerResult.reference_number}
+                    {t('guide.reference_label')} {trackerResult.reference_number}
                   </h3>
                   <p style={{ fontSize: '0.875rem', color: '#64748b', marginTop: '2px' }}>
-                    {isTamil ? 'விண்ணப்பதாரர்:' : 'Applicant:'} <strong>{trackerResult.applicant_name}</strong> • {isTamil ? 'சமர்ப்பிக்கப்பட்ட நாள்:' : 'Submitted:'} {trackerResult.submission_date}
+                    {t('guide.applicant_label')} <strong>{trackerResult.applicant_name}</strong> • {t('guide.submitted_label')} {trackerResult.submission_date}
                   </p>
                 </div>
 
@@ -544,15 +550,15 @@ export const ApplicationGuide = ({ onBackToHome, initialScheme = 'old_age_pensio
                   border: `1.5px solid ${trackerResult.current_status === 'approved' ? '#86efac' : '#fde68a'}`
                 }}>
                   {trackerResult.current_status === 'approved'
-                    ? (isTamil ? '✅ ஆணை ஒப்புதல் அளிக்கப்பட்டது' : '✅ Sanction Approved')
-                    : (isTamil ? '⏳ பரிசீலனையில் உள்ளது' : '⏳ Field Verification Underway')}
+                    ? t('guide.status_approved')
+                    : t('guide.status_review')}
                 </div>
               </div>
 
               {/* Audio Narration */}
               <div style={{ marginBottom: '1.5rem' }}>
                 <AudioPlayer
-                  text={isTamil ? trackerResult.voice_summary_ta : trackerResult.voice_summary_en}
+                  text={getLocalized(trackerResult, 'voice_summary')}
                   autoPlay={true}
                 />
               </div>
@@ -590,7 +596,7 @@ export const ApplicationGuide = ({ onBackToHome, initialScheme = 'old_age_pensio
                     <div style={{ flex: 1 }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
                         <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#1e293b', margin: 0 }}>
-                          {isTamil ? stg.title_ta : stg.title_en}
+                          {getLocalized(stg, 'title')}
                         </h4>
                         <span style={{ fontSize: '0.775rem', fontWeight: 600, color: '#64748b' }}>
                           📅 {stg.date}
@@ -598,7 +604,7 @@ export const ApplicationGuide = ({ onBackToHome, initialScheme = 'old_age_pensio
                       </div>
 
                       <p style={{ fontSize: '0.85rem', color: '#475569', marginTop: '4px', margin: 0 }}>
-                        💬 <strong>{t('guide.officer_note_label')}</strong> {isTamil ? stg.officer_note_ta : stg.officer_note_en}
+                        💬 <strong>{t('guide.officer_note_label')}</strong> {getLocalized(stg, 'officer_note')}
                       </p>
                     </div>
                   </div>
@@ -607,7 +613,7 @@ export const ApplicationGuide = ({ onBackToHome, initialScheme = 'old_age_pensio
 
               {/* Transparent Disclaimer Box */}
               <div style={{ background: '#f8fafc', padding: '0.85rem', borderRadius: '10px', fontSize: '0.8rem', color: '#64748b', textAlign: 'center', border: '1px solid #e2e8f0' }}>
-                ℹ️ <strong>{t('guide.disclaimer_title')}</strong> {isTamil ? trackerResult.disclaimer_ta : trackerResult.disclaimer_en}
+                ℹ️ <strong>{t('guide.disclaimer_title')}</strong> {getLocalized(trackerResult, 'disclaimer')}
               </div>
             </div>
           )}
@@ -629,7 +635,7 @@ export const ApplicationGuide = ({ onBackToHome, initialScheme = 'old_age_pensio
             textDecoration: 'underline'
           }}
         >
-          ← {isTamil ? 'முகப்புக்கு திரும்புக' : 'Back to Home'}
+          ← {t('guide.back_to_home')}
         </button>
       </div>
     </div>

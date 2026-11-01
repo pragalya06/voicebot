@@ -10,11 +10,11 @@ export const SchemeCard = ({ scheme }) => {
   const handleSpeakScheme = () => {
     if (isAudioMuted) return;
     setIsSpeaking(true);
-    
-    const isTamil = currentLanguage === 'ta';
-    const textToSpeak = isTamil
-      ? `${scheme.scheme_name}. பயன்: ${scheme.benefit}. பொருந்திய காரணம்: ${scheme.why_matched[0] || 'தகுதி பூர்த்தியடைகிறது'}.`
-      : `${scheme.scheme_name}. Benefit: ${scheme.benefit}. Why it matches: ${scheme.why_matched[0] || 'Criteria fulfilled'}.`;
+
+    const benefitLabel = t('scheme_card.speak_benefit') || 'Benefit';
+    const whyLabel = t('scheme_card.speak_why') || 'Why it matches';
+    const fallbackCriteria = t('scheme_card.criteria_met') || 'Criteria fulfilled';
+    const textToSpeak = `${scheme.scheme_name}. ${benefitLabel}: ${scheme.benefit}. ${whyLabel}: ${scheme.why_matched[0] || fallbackCriteria}.`;
 
     speechService.speak(
       textToSpeak,
@@ -67,7 +67,7 @@ export const SchemeCard = ({ scheme }) => {
           gap: '4px'
         }}>
           <span>{scheme.match_score}%</span>
-          <span>{currentLanguage === 'ta' ? 'பொருந்துகிறது' : 'Match'}</span>
+          <span>{t('scheme_card.match')}</span>
         </div>
       </div>
 
@@ -83,7 +83,7 @@ export const SchemeCard = ({ scheme }) => {
         <div style={{ marginBottom: '0.75rem' }}>
           <h4 style={{ fontSize: '0.85rem', fontWeight: 700, color: '#166534', display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.35rem' }}>
             <CheckCircle size={16} />
-            <span>{currentLanguage === 'ta' ? 'ஏன் பொருந்துகிறது:' : 'Why this matches:'}</span>
+            <span>{t('scheme_card.why_matched')}</span>
           </h4>
           <ul style={{ listStyle: 'none', paddingLeft: '1.25rem', fontSize: '0.875rem', color: '#334155' }}>
             {scheme.why_matched.map((r, i) => (
@@ -101,7 +101,7 @@ export const SchemeCard = ({ scheme }) => {
         <div style={{ marginBottom: '1rem' }}>
           <h4 style={{ fontSize: '0.85rem', fontWeight: 700, color: '#b45309', display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.35rem' }}>
             <AlertTriangle size={16} />
-            <span>{currentLanguage === 'ta' ? 'சரிபார்க்க வேண்டியவை:' : 'Required verifications:'}</span>
+            <span>{t('scheme_card.missing_reqs')}</span>
           </h4>
           <ul style={{ listStyle: 'none', paddingLeft: '1.25rem', fontSize: '0.875rem', color: '#64748b' }}>
             {scheme.missing_info.map((m, i) => (
@@ -118,7 +118,7 @@ export const SchemeCard = ({ scheme }) => {
       <div style={{ background: '#f8fafc', padding: '0.75rem 1rem', borderRadius: '10px', marginBottom: '1rem', border: '1px dashed #cbd5e1' }}>
         <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#475569', display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '4px' }}>
           <FileText size={14} />
-          {currentLanguage === 'ta' ? 'தேவையான ஆவணங்கள்:' : 'Required Documents:'}
+          {t('scheme_card.required_docs')}
         </span>
         <p style={{ fontSize: '0.825rem', color: '#64748b' }}>
           {scheme.required_documents.join(' • ')}
@@ -147,7 +147,7 @@ export const SchemeCard = ({ scheme }) => {
           }}
         >
           <Volume2 size={16} color="#2563eb" />
-          <span>{isSpeaking ? (currentLanguage === 'ta' ? 'வாசிக்கிறது...' : 'Reading...') : (currentLanguage === 'ta' ? 'குரல் வழியே கேள்' : 'Listen')}</span>
+          <span>{isSpeaking ? (t('audio.playing') || 'Reading...') : (t('audio.play') || 'Listen')}</span>
         </button>
 
         {/* Official Portal Link */}
@@ -165,7 +165,7 @@ export const SchemeCard = ({ scheme }) => {
             textDecoration: 'none'
           }}
         >
-          <span>{currentLanguage === 'ta' ? 'அதிகாரப்பூர்வ தளம்' : 'Official Portal'}</span>
+          <span>{t('scheme_card.official_portal')}</span>
           <ExternalLink size={14} />
         </a>
       </div>

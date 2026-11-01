@@ -6,7 +6,6 @@ import { AudioPlayer } from './AudioPlayer';
 
 export const EligibilityForm = ({ onBackToHome }) => {
   const { currentLanguage, t } = useTranslation();
-  const isTamil = currentLanguage === 'ta';
 
   // Form State
   const [age, setAge] = useState(45);
@@ -55,15 +54,13 @@ export const EligibilityForm = ({ onBackToHome }) => {
       {/* Header Banner */}
       <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <span className="badge-official">
-          ✨ {isTamil ? 'தனிப்பயனாக்கப்பட்ட திட்டக் கண்டுபிடிப்பான்' : 'Personalized Scheme Finder'}
+          ✨ {t('eligibility.badge')}
         </span>
         <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#1e3a8a', marginTop: '6px' }}>
-          {isTamil ? 'உங்களுக்கு ஏற்ற அரசுத் திட்டங்களை கண்டறியுங்கள்' : 'Discover Government Schemes You Qualify For'}
+          {t('eligibility.heading')}
         </h2>
         <p style={{ color: '#64748b', fontSize: '0.95rem', marginTop: '4px' }}>
-          {isTamil
-            ? 'அடிப்படை விவரங்களை மட்டும் உள்ளிடவும். உங்கள் தகுதிக்கான காரணங்களும் தேவையான ஆவணங்களும் உடனே கணக்கிடப்படும்.'
-            : 'Enter minimal details to evaluate eligibility across social welfare, pensions, and farmer schemes.'}
+          {t('eligibility.description')}
         </p>
       </div>
 
@@ -79,7 +76,7 @@ export const EligibilityForm = ({ onBackToHome }) => {
           {/* Question 1: Age */}
           <div style={{ marginBottom: '1.5rem' }}>
             <label style={{ display: 'block', fontWeight: 700, color: '#1e293b', marginBottom: '0.5rem' }}>
-              1. {isTamil ? 'உங்கள் வயது என்ன?' : 'What is your age?'} ({age} {isTamil ? 'வயது' : 'years'})
+              1. {t('eligibility.q_age')} ({age} {t('eligibility.years')})
             </label>
             <input
               type="range"
@@ -92,7 +89,7 @@ export const EligibilityForm = ({ onBackToHome }) => {
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: '#64748b' }}>
               <span>18</span>
               <span>40</span>
-              <span>60 (OAP Threshold)</span>
+              <span>{t('eligibility.age_oap')}</span>
               <span>90</span>
             </div>
           </div>
@@ -100,7 +97,7 @@ export const EligibilityForm = ({ onBackToHome }) => {
           {/* Question 2: Gender */}
           <div style={{ marginBottom: '1.5rem' }}>
             <label style={{ display: 'block', fontWeight: 700, color: '#1e293b', marginBottom: '0.5rem' }}>
-              2. {isTamil ? 'பாலினம்' : 'Gender'}
+              2. {t('eligibility.q_gender')}
             </label>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
               <button
@@ -109,7 +106,7 @@ export const EligibilityForm = ({ onBackToHome }) => {
                 className={`lang-choice-card ${gender === 'female' ? 'selected' : ''}`}
                 style={{ textAlign: 'center', padding: '0.85rem' }}
               >
-                <span style={{ fontWeight: 700 }}>👩 {isTamil ? 'பெண்' : 'Female'}</span>
+                <span style={{ fontWeight: 700 }}>👩 {t('eligibility.female')}</span>
               </button>
               <button
                 type="button"
@@ -117,7 +114,7 @@ export const EligibilityForm = ({ onBackToHome }) => {
                 className={`lang-choice-card ${gender === 'male' ? 'selected' : ''}`}
                 style={{ textAlign: 'center', padding: '0.85rem' }}
               >
-                <span style={{ fontWeight: 700 }}>👨 {isTamil ? 'ஆண்' : 'Male'}</span>
+                <span style={{ fontWeight: 700 }}>👨 {t('eligibility.male')}</span>
               </button>
             </div>
           </div>
@@ -125,7 +122,7 @@ export const EligibilityForm = ({ onBackToHome }) => {
           {/* Question 3: Occupation */}
           <div style={{ marginBottom: '1.5rem' }}>
             <label style={{ display: 'block', fontWeight: 700, color: '#1e293b', marginBottom: '0.5rem' }}>
-              3. {isTamil ? 'தொழில்' : 'Primary Occupation'}
+              3. {t('eligibility.q_occupation')}
             </label>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
               <button
@@ -134,7 +131,7 @@ export const EligibilityForm = ({ onBackToHome }) => {
                 className={`lang-choice-card ${occupation === 'farmer' ? 'selected' : ''}`}
                 style={{ padding: '0.75rem' }}
               >
-                <span style={{ fontWeight: 700 }}>🌾 {isTamil ? 'விவசாயி' : 'Farmer'}</span>
+                <span style={{ fontWeight: 700 }}>🌾 {t('eligibility.farmer')}</span>
               </button>
               <button
                 type="button"
@@ -142,7 +139,7 @@ export const EligibilityForm = ({ onBackToHome }) => {
                 className={`lang-choice-card ${occupation === 'homemaker' ? 'selected' : ''}`}
                 style={{ padding: '0.75rem' }}
               >
-                <span style={{ fontWeight: 700 }}>🏠 {isTamil ? 'குடும்பத்தலைவி' : 'Homemaker'}</span>
+                <span style={{ fontWeight: 700 }}>🏠 {t('eligibility.homemaker')}</span>
               </button>
               <button
                 type="button"
@@ -150,7 +147,7 @@ export const EligibilityForm = ({ onBackToHome }) => {
                 className={`lang-choice-card ${occupation === 'laborer' ? 'selected' : ''}`}
                 style={{ padding: '0.75rem' }}
               >
-                <span style={{ fontWeight: 700 }}>🔨 {isTamil ? 'தினக்கூலி / தொழிலாளி' : 'Daily Wage Laborer'}</span>
+                <span style={{ fontWeight: 700 }}>🔨 {t('eligibility.laborer')}</span>
               </button>
               <button
                 type="button"
@@ -158,7 +155,7 @@ export const EligibilityForm = ({ onBackToHome }) => {
                 className={`lang-choice-card ${occupation === 'other' ? 'selected' : ''}`}
                 style={{ padding: '0.75rem' }}
               >
-                <span style={{ fontWeight: 700 }}>💼 {isTamil ? 'இதர தொழில்' : 'Other / Retired'}</span>
+                <span style={{ fontWeight: 700 }}>💼 {t('eligibility.other_retired')}</span>
               </button>
             </div>
           </div>
@@ -166,7 +163,7 @@ export const EligibilityForm = ({ onBackToHome }) => {
           {/* Question 4: Annual Family Income */}
           <div style={{ marginBottom: '1.5rem' }}>
             <label style={{ display: 'block', fontWeight: 700, color: '#1e293b', marginBottom: '0.5rem' }}>
-              4. {isTamil ? 'குடும்ப ஆண்டு வருமானம்' : 'Annual Family Income Range'}
+              4. {t('eligibility.q_income')}
             </label>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
               <button
@@ -176,7 +173,7 @@ export const EligibilityForm = ({ onBackToHome }) => {
                 style={{ padding: '0.75rem' }}
               >
                 <span style={{ fontWeight: 700 }}>≤ ₹24,000</span>
-                <span style={{ fontSize: '0.75rem', color: '#64748b' }}>{isTamil ? 'வறுமைக்கோட்டுக்கு கீழ் (BPL)' : 'Below Poverty Line (BPL)'}</span>
+                <span style={{ fontSize: '0.75rem', color: '#64748b' }}>{t('eligibility.bpl')}</span>
               </button>
               <button
                 type="button"
@@ -185,7 +182,7 @@ export const EligibilityForm = ({ onBackToHome }) => {
                 style={{ padding: '0.75rem' }}
               >
                 <span style={{ fontWeight: 700 }}>₹24,000 - ₹1.2 Lakh</span>
-                <span style={{ fontSize: '0.75rem', color: '#64748b' }}>{isTamil ? 'CMCHIS காப்பீடு வரம்பு' : 'CMCHIS Health Cap'}</span>
+                <span style={{ fontSize: '0.75rem', color: '#64748b' }}>{t('eligibility.cmchis_cap')}</span>
               </button>
               <button
                 type="button"
@@ -194,7 +191,7 @@ export const EligibilityForm = ({ onBackToHome }) => {
                 style={{ padding: '0.75rem' }}
               >
                 <span style={{ fontWeight: 700 }}>₹1.2 - ₹2.5 Lakh</span>
-                <span style={{ fontSize: '0.75rem', color: '#64748b' }}>{isTamil ? 'மகளிர் உரிமை வரம்பு' : 'KMUT Ceiling'}</span>
+                <span style={{ fontSize: '0.75rem', color: '#64748b' }}>{t('eligibility.kmut_ceiling')}</span>
               </button>
               <button
                 type="button"
@@ -203,7 +200,7 @@ export const EligibilityForm = ({ onBackToHome }) => {
                 style={{ padding: '0.75rem' }}
               >
                 <span style={{ fontWeight: 700 }}>&gt; ₹2.5 Lakh</span>
-                <span style={{ fontSize: '0.75rem', color: '#64748b' }}>{isTamil ? 'பொது பிரிவு' : 'General'}</span>
+                <span style={{ fontSize: '0.75rem', color: '#64748b' }}>{t('eligibility.general')}</span>
               </button>
             </div>
           </div>
@@ -211,7 +208,7 @@ export const EligibilityForm = ({ onBackToHome }) => {
           {/* Question 5: Marital Status */}
           <div style={{ marginBottom: '2rem' }}>
             <label style={{ display: 'block', fontWeight: 700, color: '#1e293b', marginBottom: '0.5rem' }}>
-              5. {isTamil ? 'திருமண நிலை' : 'Marital Status'}
+              5. {t('eligibility.q_marital')}
             </label>
             <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
               <button
@@ -220,7 +217,7 @@ export const EligibilityForm = ({ onBackToHome }) => {
                 className={`lang-choice-card ${maritalStatus === 'married' ? 'selected' : ''}`}
                 style={{ flex: 1, padding: '0.65rem', textAlign: 'center' }}
               >
-                <span style={{ fontWeight: 600 }}>{isTamil ? 'திருமணமானவர்' : 'Married'}</span>
+                <span style={{ fontWeight: 600 }}>{t('eligibility.married')}</span>
               </button>
               <button
                 type="button"
@@ -228,7 +225,7 @@ export const EligibilityForm = ({ onBackToHome }) => {
                 className={`lang-choice-card ${maritalStatus === 'widow' ? 'selected' : ''}`}
                 style={{ flex: 1, padding: '0.65rem', textAlign: 'center' }}
               >
-                <span style={{ fontWeight: 600 }}>{isTamil ? 'விதவை / ஆதரவற்றவர்' : 'Widowed / Destitute'}</span>
+                <span style={{ fontWeight: 600 }}>{t('eligibility.widowed')}</span>
               </button>
               <button
                 type="button"
@@ -236,7 +233,7 @@ export const EligibilityForm = ({ onBackToHome }) => {
                 className={`lang-choice-card ${maritalStatus === 'single' ? 'selected' : ''}`}
                 style={{ flex: 1, padding: '0.65rem', textAlign: 'center' }}
               >
-                <span style={{ fontWeight: 600 }}>{isTamil ? 'திருமணமாகாதவர்' : 'Single'}</span>
+                <span style={{ fontWeight: 600 }}>{t('eligibility.single')}</span>
               </button>
             </div>
           </div>
@@ -249,7 +246,7 @@ export const EligibilityForm = ({ onBackToHome }) => {
             style={{ width: '100%', padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem' }}
           >
             {isLoading ? <Loader2 style={{ animation: 'spin 1s linear infinite' }} size={22} /> : <Sparkles size={22} />}
-            <span>{isTamil ? 'எனக்கான திட்டங்களை கண்டறியுங்கள்' : 'Find My Eligible Schemes'}</span>
+            <span>{isLoading ? t('eligibility.evaluating') : t('eligibility.find_schemes_btn')}</span>
           </button>
         </form>
       ) : (
@@ -268,7 +265,7 @@ export const EligibilityForm = ({ onBackToHome }) => {
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <UserCheck size={24} color="#15803d" />
                 <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#1e3a8a' }}>
-                  {isTamil ? `பொருந்திய திட்டங்கள்: ${results.matched_count}` : `Recommended Schemes (${results.matched_count} High Matches)`}
+                  {t('eligibility.recommended_heading')} ({results.matched_count} {t('eligibility.high_matches')})
                 </h3>
               </div>
 
@@ -290,7 +287,7 @@ export const EligibilityForm = ({ onBackToHome }) => {
                 }}
               >
                 <RotateCcw size={14} />
-                <span>{isTamil ? 'விவரங்களை மாற்ற' : 'Modify Answers'}</span>
+                <span>{t('eligibility.modify_answers')}</span>
               </button>
             </div>
 
@@ -320,7 +317,7 @@ export const EligibilityForm = ({ onBackToHome }) => {
                 textDecoration: 'underline'
               }}
             >
-              ← {isTamil ? 'முகப்புக்கு திரும்புக' : 'Back to Home'}
+              ← {t('eligibility.back_to_home')}
             </button>
           </div>
         </div>

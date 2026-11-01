@@ -373,29 +373,47 @@ def check_document_readiness(
 
     # Tailored Conversational Voice Summaries
     if is_ready:
-        voice_summary = (
-            f"உங்கள் ஆவணப் பரிசோதனை முடிந்தது. தயார்நிலை மதிப்பீடு {readiness_score} சதவீதம். ஆதார் மற்றும் தேவையான சான்றிதழ் விவரங்கள் தெளிவாக உள்ளன. நீங்கள் இ-சேவை மையம் செல்ல தயாராக உள்ளீர்கள்."
-            if is_tamil else
-            f"Document readiness scan complete with a score of {readiness_score} percent. Your Aadhaar and key certificate details were successfully detected. Your papers appear ready for submission at the e-Seva centre."
-        )
+        if lang == "ta":
+            voice_summary = f"உங்கள் ஆவணப் பரிசோதனை முடிந்தது. தயார்நிலை மதிப்பீடு {readiness_score} சதவீதம். ஆதார் மற்றும் தேவையான சான்றிதழ் விவரங்கள் தெளிவாக உள்ளன. நீங்கள் இ-சேவை மையம் செல்ல தயாராக உள்ளீர்கள்."
+        elif lang == "hi":
+            voice_summary = f"आपके दस्तावेज की जांच पूरी हो गई है। तैयारी स्कोर {readiness_score} प्रतिशत है। आधार और आवश्यक विवरण स्पष्ट हैं। आप ई-सेवा केंद्र जाने के लिए तैयार हैं।"
+        elif lang == "mr":
+            voice_summary = f"तुमच्या कागदपत्रांची पडताळणी पूर्ण झाली आहे. तयारी स्कोअर {readiness_score} टक्के आहे. आधार आणि आवश्यक तपशील स्पष्ट आहेत. तुम्ही ई-सेवा केंद्रात जाण्यासाठी तयार आहात."
+        elif lang == "bn":
+            voice_summary = f"আপনার নথি যাচাই সম্পন্ন হয়েছে। প্রস্তুতির স্কোর {readiness_score} শতাংশ। আধার এবং প্রয়োজনীয় বিবরণ স্পষ্ট। আপনি ই-সেবা কেন্দ্রে যাওয়ার জন্য প্রস্তুত।"
+        else:
+            voice_summary = f"Document readiness scan complete with a score of {readiness_score} percent. Your Aadhaar and key certificate details were successfully detected. Your papers appear ready for submission at the e-Seva centre."
     elif readiness_score >= 50:
-        voice_summary = (
-            f"ஆவணத்தில் சில முக்கிய விவரங்கள் கண்டறியப்பட்டன, ஆனால் அதிகாரப்பூர்வ முத்திரை அல்லது சில வரம்புகள் தெளிவாக இல்லை. தயவுசெய்து வெளிச்சமான புகைப்படத்தை மீண்டும் பதிவேற்றவும்."
-            if is_tamil else
-            f"Your document was partially detected with a readiness score of {readiness_score} percent. However, some stamps or certificate details need attention before submission."
-        )
+        if lang == "ta":
+            voice_summary = f"ஆவணத்தில் சில முக்கிய விவரங்கள் கண்டறியப்பட்டன, ஆனால் அதிகாரப்பூர்வ முத்திரை அல்லது சில வரம்புகள் தெளிவாக இல்லை. தயவுசெய்து வெளிச்சமான புகைப்படத்தை மீண்டும் பதிவேற்றவும்."
+        elif lang == "hi":
+            voice_summary = f"दस्तावेज में कुछ विवरण मिले हैं, लेकिन आधिकारिक मुहर या कुछ जानकारी स्पष्ट नहीं है। कृपया बेहतर रोशनी में स्पष्ट फोटो पुनः अपलोड करें।"
+        elif lang == "mr":
+            voice_summary = f"कागदपत्रात काही तपशील आढळले आहेत, परंतु अधिकृत शिक्का किंवा काही माहिती अस्पष्ट आहे. कृपया चांगल्या प्रकाशात स्पष्ट फोटो पुन्हा अपलोड करा."
+        elif lang == "bn":
+            voice_summary = f"নথিতে কিছু বিবরণ পাওয়া গেছে, তবে অফিশিয়াল সিল বা কিছু তথ্য স্পষ্ট নয়। অনুগ্রহ করে পরিষ্কার আলোতে নতুন ছবি আপলোড করুন।"
+        else:
+            voice_summary = f"Your document was partially detected with a readiness score of {readiness_score} percent. However, some stamps or certificate details need attention before submission."
     else:
-        voice_summary = (
-            "ஆவணத்தில் தேவையான விவரங்கள் தெளிவாக படிக்க முடியவில்லை அல்லது விடுபட்டுள்ளன. நிழல் மற்றும் மங்கலான பகுதிகள் இல்லாமல் புதிய தெளிவான புகைப்படத்தை பதிவேற்றவும்."
-            if is_tamil else
-            "Critical details such as the official seal, Aadhaar number, or income details were unreadable. Please capture a brighter, clearer photo without glare."
-        )
+        if lang == "ta":
+            voice_summary = "ஆவணத்தில் தேவையான விவரங்கள் தெளிவாக படிக்க முடியவில்லை அல்லது விடுபட்டுள்ளன. நிழல் மற்றும் மங்கலான பகுதிகள் இல்லாமல் புதிய தெளிவான புகைப்படத்தை பதிவேற்றவும்."
+        elif lang == "hi":
+            voice_summary = "दस्तावेज में आवश्यक विवरण स्पष्ट नहीं पढ़े जा सके। कृपया बिना छाया और स्पष्टता के साथ नई तस्वीर अपलोड करें।"
+        elif lang == "mr":
+            voice_summary = "कागदपत्रातील आवश्यक माहिती स्पष्ट वाचता आली नाही. कृपया सावली नसलेला नवीन स्पष्ट फोटो अपलोड करा."
+        elif lang == "bn":
+            voice_summary = "নথিতে প্রয়োজনীয় বিবরণ স্পষ্টভাবে পড়া যায়নি। অনুগ্রহ করে ছায়াহীন ও পরিষ্কার নতুন ছবি আপলোড করুন।"
+        else:
+            voice_summary = "Critical details such as the official seal, Aadhaar number, or income details were unreadable. Please capture a brighter, clearer photo without glare."
 
-    disclaimer = (
-        "இது இ-சேவை மையம் அல்லது தாலுகா அலுவலகத்திற்கு செல்வதற்கு முன் நீங்கள் தயாராக உதவும் முதற்கட்ட ஆரம்ப சோதனையே தவிர, அதிகாரப்பூர்வ அரசு இறுதி ஒப்புதல் அல்ல."
-        if is_tamil else
-        "This is a preliminary readiness check to assist your preparation before visiting the Taluk or e-Seva office. It is not an official government verification."
-    )
+    disclaimer_map = {
+        "ta": "இது இ-சேவை மையம் அல்லது தாலுகா அலுவலகத்திற்கு செல்வதற்கு முன் நீங்கள் தயாராக உதவும் முதற்கட்ட ஆரம்ப சோதனையே தவிர, அதிகாரப்பூர்வ அரசு இறுதி ஒப்புதல் அல்ல.",
+        "hi": "यह ई-सेवा केंद्र जाने से पूर्व आपकी तैयारी हेतु प्रारंभिक जांच है, आधिकारिक सरकारी सत्यापन नहीं।",
+        "mr": "हे ई-सेवा केंद्रात जाण्यापूर्वी आपल्या तयारीसाठी प्राथमिक मूल्यांकन आहे, अधिकृत सरकारी पडताळणी नाही.",
+        "bn": "এটি ই-সেবা কেন্দ্রে যাওয়ার আগে আপনার প্রস্তুতির জন্য একটি প্রাথমিক পরীক্ষা, অফিসিয়াল সরকারি অনুমোদন নয়।",
+        "en": "This is a preliminary readiness check to assist your preparation before visiting the Taluk or e-Seva office. It is not an official government verification."
+    }
+    disclaimer = disclaimer_map.get(lang, disclaimer_map["en"])
 
     return {
         "readiness_score": readiness_score,

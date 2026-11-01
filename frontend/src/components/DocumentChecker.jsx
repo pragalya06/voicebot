@@ -5,7 +5,6 @@ import { AudioPlayer } from './AudioPlayer';
 
 export const DocumentChecker = ({ onBackToHome, onGoToGuide }) => {
   const { currentLanguage, t } = useTranslation();
-  const isTamil = currentLanguage === 'ta';
 
   const [selectedScheme, setSelectedScheme] = useState('old_age_pension');
   const [selectedFile, setSelectedFile] = useState(null);
@@ -215,16 +214,16 @@ export const DocumentChecker = ({ onBackToHome, onGoToGuide }) => {
               }}
             >
               <option value="old_age_pension">
-                {isTamil ? 'முதியோர் ஓய்வூதியத் திட்டம் (OAP)' : 'Indira Gandhi Old Age Pension Scheme (IGNOAPS)'}
+                {t('schemes.oap')}
               </option>
               <option value="kalaignar_magalir_urimai">
-                {isTamil ? 'கலைஞர் மகளிர் உரிமைத் திட்டம் (KMUT)' : 'Kalaignar Magalir Urimai Thogai Scheme'}
+                {t('schemes.kmut')}
               </option>
               <option value="pm_kisan">
-                {isTamil ? 'பிரதம மந்திரி கிசான் சம்மான் நிதி (PM-KISAN)' : 'PM-KISAN Farmer Scheme'}
+                {t('schemes.pm_kisan')}
               </option>
               <option value="cmchis_health">
-                {isTamil ? 'முதலமைச்சரின் விரிவான மருத்துவக் காப்பீடு (CMCHIS)' : 'CMCHIS Health Insurance Scheme'}
+                {t('schemes.cmchis')}
               </option>
             </select>
           </div>
@@ -268,7 +267,7 @@ export const DocumentChecker = ({ onBackToHome, onGoToGuide }) => {
                     📄 {selectedFile.name}
                   </p>
                   <p style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '2px' }}>
-                    {(selectedFile.size / 1024).toFixed(1)} KB • {isTamil ? 'மாற்ற கிளிக் செய்யவும்' : 'Click to change file'}
+                    {(selectedFile.size / 1024).toFixed(1)} KB • {t('doc_checker.click_to_change')}
                   </p>
 
                   {previewUrl && (

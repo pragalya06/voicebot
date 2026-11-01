@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Mic, ArrowRight, FileCheck, CheckCircle2, BookOpen, Sparkles, MessageSquareQuote, ExternalLink, HelpCircle, Loader2 } from 'lucide-react';
 import { LanguageProvider, useTranslation } from './i18n';
 import { Header } from './components/Header';
@@ -8,16 +8,46 @@ import { AudioPlayer } from './components/AudioPlayer';
 import { EligibilityForm } from './components/EligibilityForm';
 import { DocumentChecker } from './components/DocumentChecker';
 import { ApplicationGuide } from './components/ApplicationGuide';
+import { speechService } from './services/speech';
+
+// ── Session helpers ──────────────────────────────────────────────────────────
+// Session ID lives in sessionStorage so it is unique per browser tab and is
+// automatically cleared when the tab closes. No login, no persistent tracking.
+function getOrCreateSessionId() {
+  const key = 'sevamitra_session_id';
+  let sid = sessionStorage.getItem(key);
+  if (!sid) {
+    // Simple UUID v4-like generator (no dependency needed)
+    sid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+      const r = (Math.random() * 16) | 0;
+      return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+    });
+    sessionStorage.setItem(key, sid);
+  }
+  return sid;
+}
 
 function MainApp() {
-  const { t, currentLanguage } = useTranslation();
+  const { t, currentLanguage, changeLanguage } = useTranslation();
   const [backendStatus, setBackendStatus] = useState('checking');
   const [queryInput, setQueryInput] = useState('');
   const [activeModule, setActiveModule] = useState('home');
   const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
-  
+
   // Active conversation response
   const [currentResponse, setCurrentResponse] = useState(null);
+
+  // Session ID: stable per tab, stored in sessionStorage
+  const sessionIdRef = useRef(getOrCreateSessionId());
+
+  // Conversation history: last 6 messages (3 exchanges) sent with each request
+  // so the backend can resolve follow-ups. Not persisted after tab close.
+  const [conversationHistory, setConversationHistory] = useState([]);
+
+  // Request ID guard: prevents a stale/slow response from overwriting a newer one.
+  // Each processQuery() call increments this; the fetch only applies its result
+  // if the ID still matches when it completes.
+  const requestIdRef = useRef(0);
 
   // Check backend health on mount
   useEffect(() => {
@@ -44,23 +74,68 @@ function MainApp() {
     if (!questionText.trim()) return;
 
     const queryLang = targetLang || currentLanguage;
+
+    // Stop any speech currently playing before processing the new question
+    speechService.stop();
+
     setIsLoadingQuery(true);
+
+    // Assign a unique ID for this request
+    const thisRequestId = ++requestIdRef.current;
+
+    // Build the last 6 messages (3 exchanges) to send as context.
+    // Older messages are dropped to keep the payload small.
+    const historyToSend = conversationHistory.slice(-6).map((m) => ({
+      role: m.role,
+      content: m.content,
+    }));
+
     try {
       const res = await fetch('/api/assistant/ask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           query: questionText,
-          language: queryLang
-        })
+          language: queryLang,
+          session_id: sessionIdRef.current,
+          conversation_history: historyToSend,
+        }),
       });
+
+      // Guard: if a newer request has already fired, discard this response
+      if (thisRequestId !== requestIdRef.current) return;
 
       if (!res.ok) throw new Error('API query failed');
       const data = await res.json();
 
+      // Guard again after async JSON parsing
+      if (thisRequestId !== requestIdRef.current) return;
+
+      // Store the canonical session_id returned by the server
+      // (may differ from our local one if the session had expired).
+      if (data.session_id) {
+        sessionIdRef.current = data.session_id;
+        sessionStorage.setItem('sevamitra_session_id', data.session_id);
+      }
+
+      // Switch full website UI language to match the detected query language
+      if (data.language && data.language !== currentLanguage) {
+        changeLanguage(data.language);
+      }
+
+      // Append this exchange to local history
+      setConversationHistory((prev) => [
+        ...prev,
+        { role: 'user', content: questionText },
+        { role: 'assistant', content: data.answer || '' },
+      ].slice(-10)); // keep last 10 messages (5 exchanges)
+
       setCurrentResponse({
+        // Use the request ID as a stable key so AudioPlayer remounts
+        // for each new answer (prevents replaying the previous audio).
+        _id: thisRequestId,
         question: questionText,
-        detected_language: queryLang,
+        detected_language: data.language || queryLang,
         answer: data.answer,
         voice_summary: data.voice_summary,
         is_clarification: data.is_clarification,
@@ -72,25 +147,25 @@ function MainApp() {
         application_steps: data.application_steps,
         source: data.source_name,
         source_portal: data.source_portal,
-        disclaimer: data.disclaimer
+        disclaimer: data.disclaimer,
       });
     } catch (err) {
+      if (thisRequestId !== requestIdRef.current) return;
       console.error('Error contacting assistant backend:', err);
-      const isTamil = (queryLang === 'ta');
       setCurrentResponse({
+        _id: thisRequestId,
         question: questionText,
         detected_language: queryLang,
-        answer: isTamil
-          ? 'பின்புல சேவையுடன் இணைப்பதில் சிக்கல் ஏற்பட்டது. உங்கள் இணைய இணைப்பை சரிபார்க்கவும்.'
-          : 'Could not connect to the verification service. Please verify your connection.',
-        voice_summary: isTamil
-          ? 'சேவையில் பிழை ஏற்பட்டது. மீண்டும் முயற்சிக்கவும்.'
-          : 'Service error occurred. Please try again.',
-        source: isTamil ? 'சேவாமித்ரா உதவி' : 'SevaMitra Helpdesk',
-        source_portal: 'https://tn.gov.in'
+        answer: t('status.error') || 'Could not connect to the assistant service. Please check your connection and try again.',
+        voice_summary: t('status.error') || 'Connection error. Please try again.',
+        source: 'SevaMitra Helpdesk',
+        source_portal: 'https://india.gov.in',
       });
     } finally {
-      setIsLoadingQuery(false);
+      // Only clear loading if this is still the latest request
+      if (thisRequestId === requestIdRef.current) {
+        setIsLoadingQuery(false);
+      }
     }
   };
 
@@ -107,27 +182,22 @@ function MainApp() {
 
   const handleRecoveryOptionSelect = (moduleName) => {
     setActiveModule(moduleName);
-    const isTamil = currentLanguage === 'ta';
 
     let guideText = '';
     if (moduleName === 'recommendations') {
-      guideText = isTamil
-        ? 'திட்ட தகுதியை அறிய: உங்கள் வயது, தொழில் மற்றும் குடும்ப வருமானத்தை உள்ளிடவும்.'
-        : 'Check scheme eligibility: Enter your age, occupation, and family income.';
+      guideText = t('voice_recovery.option_eligibility');
     } else if (moduleName === 'documents') {
-      guideText = isTamil
-        ? 'ஆவண சரிபார்ப்பு: ஆதார் அல்லது வருமானச் சான்றிதழை பதிவேற்றி தயார்நிலையை சோதிக்கவும்.'
-        : 'Document checker: Upload your Aadhaar or income proof to check readiness.';
+      guideText = t('voice_recovery.option_documents');
     } else {
-      guideText = isTamil
-        ? 'விண்ணப்ப வழிகாட்டி: இ-சேவை மையம் செல்வதற்கு முன் தேவையான படிகளை வரிசையாக காணவும்.'
-        : 'Application guide: Follow the ordered steps before visiting the e-Seva center.';
+      guideText = t('voice_recovery.option_how_to_apply');
     }
 
+    const thisId = ++requestIdRef.current;
     setCurrentResponse({
-      question: isTamil ? 'தேர்ந்தெடுக்கப்பட்ட சேவை' : 'Selected Service',
+      _id: thisId,
+      question: t('voice_recovery.or_choose'),
       answer: guideText,
-      source: isTamil ? 'சேவாமித்ரா வழிகாட்டி' : 'SevaMitra Guidance Desk'
+      source: 'SevaMitra Guidance Desk',
     });
   };
 
@@ -238,7 +308,7 @@ function MainApp() {
               <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '12px', border: '1.5px dashed #93c5fd', marginBottom: '1rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0369a1', fontWeight: 600, fontSize: '0.9rem', marginBottom: '0.75rem' }}>
                   <HelpCircle size={18} />
-                  <span>{currentLanguage === 'ta' ? 'கீழே உள்ள விருப்பங்களில் ஒன்றைத் தேர்ந்தெடுக்கவும்:' : 'Choose a specific option to proceed:'}</span>
+                  <span>{t('voice_recovery.or_choose')}</span>
                 </div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
                   {currentResponse.clarification_options.map((opt, idx) => (
@@ -268,8 +338,15 @@ function MainApp() {
               </div>
             )}
 
-            {/* Universal Audio Player reading Voice Summary in Detected Language */}
+            {/*
+              AudioPlayer key={currentResponse._id} ensures React remounts the
+              component on every new answer, which:
+               - Stops the previous audio immediately
+               - Starts fresh auto-play for the new answer
+               - Prevents any stale text from replaying
+            */}
             <AudioPlayer
+              key={currentResponse._id}
               text={currentResponse.voice_summary || currentResponse.answer}
               lang={currentResponse.detected_language || currentLanguage}
               autoPlay={true}
@@ -286,17 +363,17 @@ function MainApp() {
                     rel="noopener noreferrer"
                     style={{ color: '#2563eb', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '3px', textDecoration: 'none' }}
                   >
-                    <span>{currentLanguage === 'ta' ? 'அரசு தளம்' : 'Official Portal'}</span>
+                    <span>{t('nav.home') === 'Home' ? 'Official Portal' : 'அரசு தளம்'}</span>
                     <ExternalLink size={14} />
                   </a>
                 )}
               </div>
-              <button 
+              <button
                 type="button"
-                onClick={() => setCurrentResponse(null)}
+                onClick={() => { speechService.stop(); setCurrentResponse(null); }}
                 style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontWeight: 600, textDecoration: 'underline' }}
               >
-                {currentLanguage === 'ta' ? 'அகற்று' : 'Clear'}
+                {currentLanguage === 'ta' ? 'அகற்று' : currentLanguage === 'hi' ? 'हटाएं' : currentLanguage === 'mr' ? 'काढा' : currentLanguage === 'bn' ? 'মুছুন' : 'Clear'}
               </button>
             </div>
           </section>
@@ -313,7 +390,7 @@ function MainApp() {
               <h3 className="module-title">{t('modules.assistant_title')}</h3>
               <p className="module-desc">{t('modules.assistant_desc')}</p>
               <button className="module-action-btn" onClick={() => setIsVoiceModalOpen(true)}>
-                <span>Ask Question</span>
+                <span>{t('hero.ask_button')}</span>
                 <ArrowRight size={16} />
               </button>
             </div>
@@ -326,7 +403,7 @@ function MainApp() {
               <h3 className="module-title">{t('modules.recommend_title')}</h3>
               <p className="module-desc">{t('modules.recommend_desc')}</p>
               <button className="module-action-btn" onClick={() => setActiveModule('recommendations')}>
-                <span>Check Eligibility</span>
+                <span>{t('voice_recovery.option_eligibility')}</span>
                 <ArrowRight size={16} />
               </button>
             </div>
@@ -339,7 +416,7 @@ function MainApp() {
               <h3 className="module-title">{t('modules.doc_checker_title')}</h3>
               <p className="module-desc">{t('modules.doc_checker_desc')}</p>
               <button className="module-action-btn" onClick={() => setActiveModule('documents')}>
-                <span>Verify Papers</span>
+                <span>{t('voice_recovery.option_documents')}</span>
                 <ArrowRight size={16} />
               </button>
             </div>
@@ -352,7 +429,7 @@ function MainApp() {
               <h3 className="module-title">{t('modules.tracking_title')}</h3>
               <p className="module-desc">{t('modules.tracking_desc')}</p>
               <button className="module-action-btn" onClick={() => setActiveModule('tracking')}>
-                <span>View Checklist & Guide</span>
+                <span>{t('voice_recovery.option_how_to_apply')}</span>
                 <ArrowRight size={16} />
               </button>
             </div>
