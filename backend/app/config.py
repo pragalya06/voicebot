@@ -14,8 +14,10 @@ class Settings(BaseModel):
     ALLOWED_ORIGINS: list[str] = [
         "http://localhost:5173",
         "http://127.0.0.1:5173",
-        "http://localhost:3000"
-    ]
+        "http://localhost:3000",
+        "https://voicebot-thnn.onrender.com",
+        "https://sevamitra-the-voicebot.onrender.com",
+    ] + [x.strip() for x in os.getenv("ALLOWED_ORIGINS", "").split(",") if x.strip()]
     
     # Speech & Language APIs (Configurable via .env)
     BHASHINI_USER_ID: str = os.getenv("BHASHINI_USER_ID", "")

@@ -14,6 +14,8 @@
  *    explicitly pass the new text to speak().
  */
 
+import { apiUrl } from './api';
+
 const LOCALE_MAP = {
   ta: 'ta-IN',
   hi: 'hi-IN',
@@ -185,7 +187,7 @@ class SpeechService {
     }
 
     try {
-      const res = await fetch('/api/speech/detect_language', {
+      const res = await fetch(apiUrl('/api/speech/detect_language'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: spokenText }),

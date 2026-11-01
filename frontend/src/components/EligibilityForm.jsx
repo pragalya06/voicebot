@@ -3,6 +3,7 @@ import { UserCheck, Sparkles, Filter, RotateCcw, Loader2 } from 'lucide-react';
 import { useTranslation } from '../i18n';
 import { SchemeCard } from './SchemeCard';
 import { AudioPlayer } from './AudioPlayer';
+import { apiUrl } from '../services/api';
 
 export const EligibilityForm = ({ onBackToHome }) => {
   const { currentLanguage, t } = useTranslation();
@@ -24,7 +25,7 @@ export const EligibilityForm = ({ onBackToHome }) => {
     setIsLoading(true);
 
     try {
-      const res = await fetch('/api/schemes/recommend', {
+      const res = await fetch(apiUrl('/api/schemes/recommend'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

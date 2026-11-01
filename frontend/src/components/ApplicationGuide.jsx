@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BookOpen, CheckSquare, Search, Clock, ShieldAlert, ArrowRight, CheckCircle2, AlertTriangle, UserCheck, MapPin, RefreshCw } from 'lucide-react';
 import { useTranslation } from '../i18n';
 import { AudioPlayer } from './AudioPlayer';
+import { apiUrl } from '../services/api';
 
 export const ApplicationGuide = ({ onBackToHome, initialScheme = 'old_age_pension' }) => {
   const { currentLanguage, t } = useTranslation();
@@ -27,7 +28,7 @@ export const ApplicationGuide = ({ onBackToHome, initialScheme = 'old_age_pensio
   // Load Scheme Roadmap from Backend
   useEffect(() => {
     setIsLoadingRoadmap(true);
-    fetch(`/api/guidance/schemes/${selectedScheme}`)
+    fetch(apiUrl(`/api/guidance/schemes/${selectedScheme}`))
       .then((res) => {
         if (res.ok) return res.json();
         throw new Error('Failed to fetch roadmap');
@@ -75,7 +76,7 @@ export const ApplicationGuide = ({ onBackToHome, initialScheme = 'old_age_pensio
 
     setIsTracking(true);
     try {
-      const res = await fetch(`/api/guidance/tracker/status?ref_number=${encodeURIComponent(targetRef)}`);
+      const res = await fetch(apiUrl(`/api/guidance/tracker/status?ref_number=${encodeURIComponent(targetRef)}`));
       if (!res.ok) throw new Error('Tracker fetch failed');
       const data = await res.json();
       setTrackerResult(data);

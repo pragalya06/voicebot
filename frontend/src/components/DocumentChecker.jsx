@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Upload, FileCheck, AlertCircle, CheckCircle, Eye, ShieldAlert, Loader2, RotateCcw, Lightbulb, ArrowRight, FileText } from 'lucide-react';
 import { useTranslation } from '../i18n';
 import { AudioPlayer } from './AudioPlayer';
+import { apiUrl } from '../services/api';
 
 export const DocumentChecker = ({ onBackToHome, onGoToGuide }) => {
   const { currentLanguage, t } = useTranslation();
@@ -44,7 +45,7 @@ export const DocumentChecker = ({ onBackToHome, onGoToGuide }) => {
     formData.append('language', currentLanguage);
 
     try {
-      const res = await fetch('/api/documents/check', {
+      const res = await fetch(apiUrl('/api/documents/check'), {
         method: 'POST',
         body: formData
       });

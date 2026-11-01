@@ -9,6 +9,7 @@ import { EligibilityForm } from './components/EligibilityForm';
 import { DocumentChecker } from './components/DocumentChecker';
 import { ApplicationGuide } from './components/ApplicationGuide';
 import { speechService } from './services/speech';
+import { apiUrl } from './services/api';
 
 // ── Session helpers ──────────────────────────────────────────────────────────
 // Session ID lives in sessionStorage so it is unique per browser tab and is
@@ -51,7 +52,7 @@ function MainApp() {
 
   // Check backend health on mount
   useEffect(() => {
-    fetch('/api/health')
+    fetch(apiUrl('/api/health'))
       .then((res) => {
         if (res.ok) return res.json();
         throw new Error('Backend not healthy');
@@ -91,7 +92,7 @@ function MainApp() {
     }));
 
     try {
-      const res = await fetch('/api/assistant/ask', {
+      const res = await fetch(apiUrl('/api/assistant/ask'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
